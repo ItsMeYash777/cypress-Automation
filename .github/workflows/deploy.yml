@@ -1,4 +1,5 @@
 name: Regression Tests
+
 on:
   workflow_dispatch:
 
@@ -8,13 +9,20 @@ jobs:
     steps:
       - name: Wait for 2 mins
         run: sleep 120
-
+      
       - name: Checkout code
         uses: actions/checkout@v4
-
+      
       - name: Run Cypress Tests
         run: echo "Running regression tests..."
-          # Simulate Cypress tests here
-
-      - name: Send Slack Notification
-        run: echo "Slack notification sent with test results."
+        # Simulate Cypress tests here
+      
+      - name: Slack Notification
+        if: always()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_USERNAME: Automation
+          SLACK_TITLE: Test Results
+          SLACK_MESSAGE: "Test Automation Report :rocket:\n\nHi Team,\n\nThe automation report is now available, and you can access it in both video and report formats for a comprehensive overview of the test results. 📊✨\nYou can view the report here: https://github.com/ItsMeYash777/cypress-Automation/actions/runs/${{github.run_id}} \nFeel free to check it out"
+          SLACK_COLOR: ${{ job.status }}
