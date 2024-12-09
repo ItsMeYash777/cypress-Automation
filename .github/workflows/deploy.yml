@@ -1,0 +1,20 @@
+name: Regression Tests
+on:
+  workflow_dispatch:
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for 1 hour
+        run: sleep 3600
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Cypress Tests
+        run: echo "Running regression tests..."
+          # Simulate Cypress tests here
+
+      - name: Send Slack Notification
+        run: echo "Slack notification sent with test results."
