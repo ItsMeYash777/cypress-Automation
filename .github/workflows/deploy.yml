@@ -6,8 +6,8 @@ jobs:
   regression:
     runs-on: ubuntu-latest
     steps:
-      - name: Wait for 1 hour
-        run: sleep 3600
+      - name: Wait for 2 mins
+        run: sleep 120
 
       - name: Checkout code
         uses: actions/checkout@v4
