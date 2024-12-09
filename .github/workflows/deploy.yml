@@ -24,5 +24,13 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_USERNAME: Automation
           SLACK_TITLE: Test Results
-          SLACK_MESSAGE: "Test Automation Report :rocket:\n\nHi Team,\n\nThe automation report is now available, and you can access it in both video and report formats for a comprehensive overview of the test results. 📊✨\nYou can view the report here: https://github.com/ItsMeYash777/cypress-Automation/actions/runs/${{github.run_id}} \nFeel free to check it out"
-          SLACK_COLOR: ${{ job.status }}
+          SLACK_MESSAGE: |
+            Test Automation Report :rocket:
+            
+            Hi Team,
+            
+            The automation report is now available, and you can access it in both video and report formats for a comprehensive overview of the test results. 📊✨
+            
+            You can view the report here: https://github.com/ItsMeYash777/cypress-Automation/actions/runs/${{github.run_id}}
+            Feel free to check it out
+          SLACK_COLOR: ${{ job.status == 'success' && 'good' || job.status == 'failure' && 'danger' || 'warning' }}
