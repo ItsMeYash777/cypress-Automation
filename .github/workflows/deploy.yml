@@ -1,22 +1,31 @@
-name: Regression Tests
-
+name: Cypress Tests
 on:
   workflow_dispatch:
-
 jobs:
-  regression:
+  cypress-run:
     runs-on: ubuntu-latest
     steps:
-      - name: Wait for 2 mins
-        run: sleep 120
-      
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
-      
-      - name: Run Cypress Tests
-        run: echo "Running regression tests..."
-        # Simulate Cypress tests here
-      
+      # Install NPM dependencies, cache them correctly
+      # and run all Cypress tests
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          command: npm run run:regression
+      - name: Uploading artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cypress-execution-report
+          path: cypress/reports/html
+          retention-days: 30
+      - name: Download artifact
+        id: download-artifact
+        uses: actions/download-artifact@v4
+        if: always()
+        with:
+          name: cypress-execution-report
       - name: Slack Notification
         if: always()
         uses: rtCamp/action-slack-notify@v2
@@ -24,13 +33,6 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_USERNAME: Automation
           SLACK_TITLE: Test Results
-          SLACK_MESSAGE: |
-            Test Automation Report :rocket:
-            
-            Hi Team,
-            
-            The automation report is now available, and you can access it in both video and report formats for a comprehensive overview of the test results. 📊✨
-            
-            You can view the report here: https://github.com/ItsMeYash777/cypress-Automation/actions/runs/${{github.run_id}}
-            Feel free to check it out
-          SLACK_COLOR: ${{ job.status == 'success' && 'good' || job.status == 'failure' && 'danger' || 'warning' }}
+          SLACK_MESSAGE: "Test Automation Report :rocket:\n\nHi Team,\n\nThe automation report is now available, and you can access it in both video and report formats for a comprehensive overview of the test results. 📊✨\nYou can view the report here: https://github.com/OrenOfficial/Cypress-Automation-Regression-Suite/actions/runs/${{github.run_id}} \nFeel free to check it out"
+          SLACK_COLOR: ${{ job.status }}
+          
